@@ -3,6 +3,7 @@
 [![TypeScript version][ts-badge]][typescript-4-9]
 [![LICENSE][license-badge]][license]
 [![Build Status - GitHub Actions][gha-badge]][gha-ci]
+[![Known Vulnerabilities](https://snyk.io/test/github/Aderinom/typedconf/badge.svg)](https://snyk.io/test/github/Aderinom/typedconf)
 
 Fully Typed Configuration for your Typescript project.
 
