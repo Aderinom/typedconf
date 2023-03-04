@@ -3,7 +3,11 @@
 [![TypeScript version][ts-badge]][typescript-4-9]
 [![LICENSE][license-badge]][license]
 [![Build Status - GitHub Actions][gha-badge]][gha-ci]
-[![Known Vulnerabilities](https://snyk.io/test/github/Aderinom/typedconf/badge.svg)](https://snyk.io/test/github/Aderinom/typedconf)
+[![Known Vulnerabilities](https://snyk.io/test/github/Aderinom/typedconf/badge.svg)](https://snyk.io/test/github/Aderinom/typedconf) 
+[![Foresight Docs](https://api-public.service.runforesight.com/api/v1/badge/success?repoId=1cc52369-48e8-4095-952c-7d4ee69b6f4c)](https://docs.runforesight.com/)
+<a href="https://codeclimate.com/github/Aderinom/typedconf/maintainability"><img src="https://api.codeclimate.com/v1/badges/4eb0f4f2713a27c529c5/maintainability" /></a>
+<a href="https://codeclimate.com/github/Aderinom/typedconf/test_coverage"><img src="https://api.codeclimate.com/v1/badges/4eb0f4f2713a27c529c5/test_coverage" /></a>
+
 
 Fully Typed Configuration for your Typescript project.
 
