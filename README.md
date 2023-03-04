@@ -109,6 +109,6 @@ Licensed under the MIT. See the [LICENSE](https://github.com/Aderinom/tconf/blob
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 
 
-[gha-badge]: https://github.com/Aderinom/typedconf/actions/workflows/nodejs.yml/badge.svg
-[gha-ci]: https://github.com/Aderinom/typedconf/actions/workflows/nodejs.yml
+[gha-badge]: https://github.com/Aderinom/typedconf/actions/workflows/CI.yml/badge.svg
+[gha-ci]: https://github.com/Aderinom/typedconf/actions/workflows/CI.yml
 [license]: https://github.com/Aderinom/typedconf/blob/master/LICENSE
