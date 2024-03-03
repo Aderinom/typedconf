@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { ConfigBuilder, ConfigException } from '../src/config.builder.js';
 
 describe('AppliedConfigBuilder', () => {
@@ -32,6 +33,53 @@ describe('AppliedConfigBuilder', () => {
         require: expect.any(Function),
         get: expect.any(Function),
       });
+    });
+  });
+
+  describe('loadJsonFile', () => {
+    it('should not throw if optional is true and file is not found', () => {
+      expect(builder.loadJsonFile('./doesnt-exist.json', true)).toBe(builder);
+    });
+
+    it('should throw if optional is false and file is ot found', () => {
+      expect(() =>
+        builder.loadJsonFile('./doesnt-exist.json', false),
+      ).toThrow();
+    });
+
+    it('should always throw if file format is invalid', () => {
+      const file = join(__dirname, './etc/invalid.json');
+      expect(() => builder.loadJsonFile(file, true)).toThrow();
+      expect(() => builder.loadJsonFile(file, false)).toThrow();
+    });
+
+    it('should use normal json parsing if json5 does not exist', () => {
+      jest.mock('json5', () => {
+        throw new Error('Not Avaiable');
+      });
+      const file5 = join(__dirname, './etc/valid.json5');
+      expect(() => builder.loadJsonFile(file5, true)).toThrow();
+      expect(builder.buildConfig().a).toBe(undefined);
+
+      const file = join(__dirname, './etc/valid.json');
+      expect(builder.loadJsonFile(file)).toBe(builder);
+      expect(builder.buildConfig().a).toBe(1);
+    });
+
+    it('should allow json5 if json5 exists', () => {
+      jest.mock('json5', () => jest.requireActual('json5'));
+      const file = join(__dirname, './etc/valid.json5');
+      expect(builder.loadJsonFile(file)).toBe(builder);
+      expect(builder.buildConfig().a).toBe(1);
+    });
+
+    it('should be able to parse normal json if json5 exists', () => {
+      jest.mock('json5', () => {
+        throw new Error('Not Avaiable');
+      });
+      const file = join(__dirname, './etc/valid.json');
+      expect(builder.loadJsonFile(file)).toBe(builder);
+      expect(builder.buildConfig().a).toBe(1);
     });
   });
 

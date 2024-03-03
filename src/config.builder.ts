@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bind, deepMerge } from './util.js';
 
-/* eslint-disable prettier/prettier */
-// Prettier makes conditional types hard to read.
+/* eslint-disable */
+// Linting makes conditional types very hard to read.
 
 
 // Forces a type to be defined
@@ -23,7 +23,7 @@ type DeepOptional<T> =
   : {[P in keyof T]?: DeepOptional<T[P]>} // Make this key optional and recurse
 
 // Deeply map all fields to a certain type
-type DeepMapToType<T, TargetType> = 
+type DeepMapToType<T, TargetType> =
   T extends Primitive | any[] ? TargetType
   : {[K in keyof T]?: DeepMapToType<T[K], TargetType>}
 
@@ -31,7 +31,7 @@ type DeepMapToType<T, TargetType> =
 type DefineKeysOfBase<
   Base,
   IsDefined,
-> = IsDefined extends Primitive  
+> = IsDefined extends Primitive
       ? Defined<Base> // If the key from defined is a primitive then return the type of base as defined
       :{
         [Key in keyof IsDefined]: // Foreach key
@@ -42,7 +42,7 @@ type DefineKeysOfBase<
 
 // Create a nested key union of the form "a" | "a.b" | "a.b.c" from a object
 type RecursiveKeyOf<TObj extends object> = {
-  [TKey in keyof TObj & (string | number)]: 
+  [TKey in keyof TObj & (string | number)]:
     Defined<TObj[TKey]> extends any[]
       ? `${TKey}` // do not recurse arrays
       : Defined<TObj[TKey]> extends object
@@ -51,16 +51,16 @@ type RecursiveKeyOf<TObj extends object> = {
 }[keyof TObj & (string | number)];
 
 // Get the type of a value at a given path
-type PathValue<Obj, Path extends string> = 
-  Path extends `${infer Key}.${infer Rest}` 
-    ? Key extends keyof Obj 
-      ? PathValue<Obj[Key], Rest> 
-      : never 
-    : Path extends keyof Obj 
-      ? Obj[Path] 
+type PathValue<Obj, Path extends string> =
+  Path extends `${infer Key}.${infer Rest}`
+    ? Key extends keyof Obj
+      ? PathValue<Obj[Key], Rest>
+      : never
+    : Path extends keyof Obj
+      ? Obj[Path]
       : never;
-      
-/* eslint-enable prettier/prettier */
+
+/* eslint-enable */
 
 export class ConfigException extends Error {
   constructor(message: string) {
@@ -69,6 +69,11 @@ export class ConfigException extends Error {
   }
 }
 
+export type BuiltConfig<T extends {}> = T & {
+  require: AppliedConfigBuilder<T>['require'];
+  get: AppliedConfigBuilder<T>['get'];
+};
+
 class AppliedConfigBuilder<ConfigScheme extends {}> {
   private readonly config: ConfigScheme = {} as any;
 
@@ -76,7 +81,7 @@ class AppliedConfigBuilder<ConfigScheme extends {}> {
    * Creates the final Configuration object
    * @returns The config object with the require and get functions attached.
    */
-  buildConfig() {
+  buildConfig(): BuiltConfig<ConfigScheme> {
     return {
       ...this.config,
       require: bind(this, this.require),
@@ -129,6 +134,52 @@ class AppliedConfigBuilder<ConfigScheme extends {}> {
   ) {
     deepMerge(this.config, applyConfig);
     return this;
+  }
+
+  loadJsonFile(path: string, optional = false) {
+    let fs: any;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      fs = require('fs');
+    } catch (error) {
+      throw new Error(
+        "Could not load module 'fs' - this function not be executed in the browser!",
+        { cause: error },
+      );
+    }
+    let content: string;
+
+    try {
+      content = fs.readFileSync(path, { encoding: 'utf-8' });
+    } catch (error) {
+      if (!optional)
+        throw new Error(`Failed to read json config file from: ${path}`, {
+          cause: error,
+        });
+      else return this;
+    }
+
+    let parserFnc = JSON.parse;
+    // If json5 is avaiable, use that to parse
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      parserFnc = require('json5').parse;
+    } catch (error) {
+      // Ignore error
+    }
+
+    let config: any;
+    try {
+      config = parserFnc(content);
+    } catch (error) {
+      // Even if config is optional. If the file exists but is not valid we throw to avoid unexpected runtime behavior
+      throw new Error(
+        `Could not parse JSON in loaded config file from: ${path}`,
+        { cause: error },
+      );
+    }
+
+    return this.applyDynamicConfig(config);
   }
 
   /**
