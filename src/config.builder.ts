@@ -69,11 +69,10 @@ export class ConfigException extends Error {
   }
 }
 
-
 export type BuiltConfig<T extends {}> = T & {
-  require: AppliedConfigBuilder<T>["require"],
-  get: AppliedConfigBuilder<T>["get"]
-}
+  require: AppliedConfigBuilder<T>['require'];
+  get: AppliedConfigBuilder<T>['get'];
+};
 
 class AppliedConfigBuilder<ConfigScheme extends {}> {
   private readonly config: ConfigScheme = {} as any;
@@ -82,7 +81,7 @@ class AppliedConfigBuilder<ConfigScheme extends {}> {
    * Creates the final Configuration object
    * @returns The config object with the require and get functions attached.
    */
-  buildConfig() : BuiltConfig<ConfigScheme>{
+  buildConfig(): BuiltConfig<ConfigScheme> {
     return {
       ...this.config,
       require: bind(this, this.require),
@@ -140,9 +139,13 @@ class AppliedConfigBuilder<ConfigScheme extends {}> {
   loadJsonFile(path: string, optional = false) {
     let fs: any;
     try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       fs = require('fs');
     } catch (error) {
-      throw new Error("Could not load module 'fs' - this function not be executed in the browser!", { cause: error })
+      throw new Error(
+        "Could not load module 'fs' - this function not be executed in the browser!",
+        { cause: error },
+      );
     }
     let content: string;
 
@@ -156,11 +159,11 @@ class AppliedConfigBuilder<ConfigScheme extends {}> {
       else return this;
     }
 
-
     let parserFnc = JSON.parse;
     // If json5 is avaiable, use that to parse
     try {
-      parserFnc = require("json5").parse;
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      parserFnc = require('json5').parse;
     } catch (error) {
       // Ignore error
     }
@@ -170,9 +173,11 @@ class AppliedConfigBuilder<ConfigScheme extends {}> {
       config = parserFnc(content);
     } catch (error) {
       // Even if config is optional. If the file exists but is not valid we throw to avoid unexpected runtime behavior
-      throw new Error(`Could not parse JSON in loaded config file from: ${path}`, { cause: error });
+      throw new Error(
+        `Could not parse JSON in loaded config file from: ${path}`,
+        { cause: error },
+      );
     }
-
 
     return this.applyDynamicConfig(config);
   }
@@ -260,4 +265,4 @@ class AppliedConfigBuilder<ConfigScheme extends {}> {
 
 export class ConfigBuilder<
   ConfigScheme extends {},
-> extends AppliedConfigBuilder<DeepOptional<ConfigScheme>> { }
+> extends AppliedConfigBuilder<DeepOptional<ConfigScheme>> {}
