@@ -22,7 +22,6 @@
 [![Known Vulnerabilities][snyk-bagdge]](https://snyk.io/test/github/Aderinom/typedconf)\
 <a href="https://codeclimate.com/github/Aderinom/typedconf/maintainability"><img src="https://api.codeclimate.com/v1/badges/4eb0f4f2713a27c529c5/maintainability" /></a>
 <a href="https://codeclimate.com/github/Aderinom/typedconf/test_coverage"><img src="https://api.codeclimate.com/v1/badges/4eb0f4f2713a27c529c5/test_coverage" /></a>
-[![Foresight Docs](https://api-public.service.runforesight.com/api/v1/badge/success?repoId=1cc52369-48e8-4095-952c-7d4ee69b6f4c)](https://docs.runforesight.com/)
 
 
 Fully Typed Configuration for your Typescript project.
