@@ -33,7 +33,7 @@ export const cfg = new ConfigBuilder<ConfigSchema>()
   // Load environment variables, Loads all variables prefixed with "MY_APP_" using "_" as a delimiter
   // E.g "MY_APP_DATABASE_HOST" will be loaded to cfg.database.host
   // Every value will be parsed with JSON.parse()
-  .loadEnv(env, 'MY_APP_', '_')
+  .loadEnv(env, 'MY_APP', '_')
   // Apply config from an outside source
   .applyDynamicConfig(loadConfig())
   // [Only where "fs" is available] Loads a json file from disk - will use "json5" if available. File can be optional or required.

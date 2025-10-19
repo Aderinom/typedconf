@@ -198,9 +198,9 @@ export class AppliedConfigBuilder<ConfigScheme extends {}> {
     parseAsJson = true,
   ): this {
     for (const fullkey of Object.keys(env)) {
-      if (!fullkey.startsWith(prefix)) continue;
+      if (!fullkey.startsWith(prefix + seperator)) continue;
 
-      const key = fullkey.replace(prefix, '');
+      const key = fullkey.replace(prefix + seperator, '');
       const cfgPath = key.split(seperator);
       let cfgRef = this.config;
 

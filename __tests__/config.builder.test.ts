@@ -85,8 +85,8 @@ describe('AppliedConfigBuilder', () => {
 
   describe('loadEnv', () => {
     it('should load environment variables starting with the prefix into the config and ignore anything else', () => {
-      const env = { MY_APP_a: '1', 'MY_APP_b-c': '2', Randomstuff: 'dwadwa' };
-      const result = builder.loadEnv(env, 'MY_APP_', '-').buildConfig();
+      const env = { 'MY_APP-a': '1', 'MY_APP-b-c': '2', Randomstuff: 'dwadwa' };
+      const result = builder.loadEnv(env, 'MY_APP', '-').buildConfig();
       expect(result).toEqual({
         a: 1,
         b: { c: 2 },
@@ -97,11 +97,11 @@ describe('AppliedConfigBuilder', () => {
 
     it('should load environment variables as string when parse json is disabled', () => {
       const env = {
-        MY_APP_a: '1',
-        'MY_APP_b-c': '{{test',
+        'MY_APP-a': '1',
+        'MY_APP-b-c': '{{test',
         Randomstuff: 'dwadwa',
       };
-      const result = builder.loadEnv(env, 'MY_APP_', '-', false).buildConfig();
+      const result = builder.loadEnv(env, 'MY_APP', '-', false).buildConfig();
       expect(result).toEqual({
         a: '1',
         b: { c: '{{test' },
