@@ -74,7 +74,7 @@ export type BuiltConfig<T extends {}> = T & {
   get: AppliedConfigBuilder<T>['get'];
 };
 
-class AppliedConfigBuilder<ConfigScheme extends {}> {
+export class AppliedConfigBuilder<ConfigScheme extends {}> {
   private readonly config: ConfigScheme = {} as any;
 
   /**
