@@ -1,5 +1,7 @@
 # TypedConf - Your config, perfectly typed
 
+[![npm version](https://badge.fury.io/js/typedconf.svg)](https://badge.fury.io/js/typedconf)
+
 [ts-badge]: https://img.shields.io/badge/TypeScript-4.9-blue.svg
 [typescript]: https://www.typescriptlang.org/
 [typescript-4-9]: https://devblogs.microsoft.com/typescript/announcing-typescript-4-9/
