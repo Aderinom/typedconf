@@ -101,7 +101,7 @@ describe('AppliedConfigBuilder', () => {
         'MY_APP-b-c': '{{test',
         Randomstuff: 'dwadwa',
       };
-      const result = builder.loadEnv(env, 'MY_APP', '-', false).buildConfig();
+      const result = builder.loadEnv(env, 'MY_APP', '-', {parseAsJson: false}).buildConfig();
       expect(result).toEqual({
         a: '1',
         b: { c: '{{test' },

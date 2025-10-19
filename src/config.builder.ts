@@ -191,11 +191,23 @@ export class AppliedConfigBuilder<ConfigScheme extends {}> {
    * @param parseAsJson will try to parse the every value as JSON, if it fails it will be loaded as string default = true
    * @returns this
    */
+
+  /**
+   * Loads all environment variables starting with the given prefix into the config.
+   * Will try to parse the value as JSON if possible.
+   * @param env the process.env object
+   * @param prefix the prefix to check for e.g. 'MY_APP_' would match MY_APP_DB_PORT and be loaded into the field db.port
+   * @param seperator the seperator to use for the config path e.g. '-' would split DB-PORT into the field db.port
+   * @param parseAsJson will try to parse the every value as JSON, if it fails it will be loaded as string default = true
+   * @returns this
+   */
   loadEnv(
     env: Record<string, string | undefined>,
     prefix: string,
     seperator: string,
-    parseAsJson = true,
+    parser_config:
+      | { parseAsJson: boolean }
+      | { parser: (key: string, value: string) => any } = { parseAsJson: true },
   ): this {
     for (const fullkey of Object.keys(env)) {
       if (!fullkey.startsWith(prefix + seperator)) continue;
@@ -210,13 +222,18 @@ export class AppliedConfigBuilder<ConfigScheme extends {}> {
       }
 
       const lastKey = cfgPath.at(-1) as string;
-      if (parseAsJson) {
+      if ('parser' in parser_config) {
+        // Try custom parser
+        cfgRef[lastKey] = parser_config.parser(key, env[fullkey] as string);
+      } else if (parser_config.parseAsJson) {
+        // Try to parse as json
         try {
           cfgRef[lastKey] = JSON.parse(env[fullkey] as string);
         } catch {
           cfgRef[lastKey] = env[fullkey];
         }
       } else {
+        // Fallback to string
         cfgRef[lastKey] = env[fullkey];
       }
     }
